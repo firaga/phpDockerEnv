@@ -1,0 +1,37 @@
+version: "3"
+services:
+  nginx:
+    container_name: ${APP}-nginx
+    image: nginx
+    ports:
+      - "80:80"
+      - "444:443"
+    volumes:
+      - ./src/:/usr/share/nginx/html
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/crt:/etc/nginx/ssl_key
+    networks:
+      - ${APP}-network
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: ${APP}-php
+    volumes:
+      - ./src:/www
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+    networks:
+      - ${APP}-network
+  mysql:
+    image: mysql:5.7
+    container_name: ${APP}-mysql
+    ports:
+      - "3309:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    networks:
+      - ${APP}-network
+networks:
+  router-network:

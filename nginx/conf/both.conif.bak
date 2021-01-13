@@ -1,0 +1,57 @@
+server {
+	listen	80;
+	server_name	ieeo-tp.com;
+   # return 301 https://$server_name$request_uri;
+	location / {
+		root	/usr/share/nginx/html;
+		index	index.html index.htm index.php;
+	}
+
+	error_page	500 502 503 504	/50x.html;
+	location = /50x.html {
+		root	/usr/share/nginx/html;
+	}
+
+	location ~ \.php$ {
+		root 		/www;
+		fastcgi_pass	php:9000;
+		fastcgi_index	index.php;
+		fastcgi_param	SCRIPT_FILENAME	$document_root$fastcgi_script_name;
+		include		fastcgi_params;
+	}
+
+	error_log  /var/log/nginx/php.error.log debug;
+}
+
+server {
+	listen	443 ssl;
+	server_name	ieeo-tp.com;
+
+
+    # ssl证书地址
+    ssl_certificate     /etc/nginx/ssl_key/server.crt;
+    ssl_certificate_key /etc/nginx/ssl_key/server.key;
+
+
+
+	location / {
+		root	/usr/share/nginx/html;
+		index	index.html index.htm index.php;
+	}
+
+	error_page	500 502 503 504	/50x.html;
+	location = /50x.html {
+		root	/usr/share/nginx/html;
+	}
+
+	location ~ \.php$ {
+		root 		/www;
+		fastcgi_pass	php:9000;
+		fastcgi_index	index.php;
+		fastcgi_param	SCRIPT_FILENAME	$document_root$fastcgi_script_name;
+		include		fastcgi_params;
+	}
+
+	error_log  /var/log/nginx/php.error.log debug;
+}
+
