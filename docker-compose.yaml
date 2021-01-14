@@ -1,7 +1,7 @@
 version: "3"
 services:
   nginx:
-    container_name: router-nginx
+    container_name: sample-nginx
     image: nginx
     ports:
       - "80:80"
@@ -12,38 +12,38 @@ services:
       - ./nginx/logs:/var/log/nginx
       - ./nginx/crt:/etc/nginx/ssl_key
     networks:
-      - router-network
+      - sample-network
   php:
     build:
       context: .
       dockerfile: php.dockerfile
-    container_name: router-php
+    container_name: sample-php
     volumes:
       - ./src:/www
       - ./php/php.ini:/usr/local/etc/php/php.ini
       - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf
     networks:
-      - router-network
+      - sample-network
   mysql:
     image: mysql:5.7
-    container_name: router-mysql
+    container_name: sample-mysql
     ports:
       - "3309:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=123456
     networks:
-      - router-network
+      - sample-network
   redis:
     image: redis
-    container_name: router-redis
+    container_name: sample-redis
     restart: always
     ports:
       - 6379:6379
     networks:
-      - router-network
+      - sample-network
     volumes:
       - ./redis/config:/docker/config
       - ./redis/data:/data
     command: redis-server /docker/config/redis.conf
 networks:
-  router-network:
+  sample-network:
